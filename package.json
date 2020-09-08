@@ -1,0 +1,32 @@
+{
+  "name": "project_name",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
+  "scripts": {
+    "watch": "nodemon -w src -x \"tsc && node -r source-map-support/register .\" -e ts",
+    "start": "node .",
+    "build": "tsc",
+    "prepack": "mkdir -p dist && rm -r dist/* && tsc -p tsconfig.prod.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/github_user/project_name.git"
+  },
+  "author": "github_user <git@domain.com>",
+  "license": "AGPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/github_user/project_name/issues"
+  },
+  "homepage": "https://github.com/github_user/project_name#readme",
+  "dependencies": {
+    "source-map-support": "^0.5.16"
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.15",
+    "nodemon": "^2.0.4",
+    "typescript": "^3.9.7"
+  }
+}
