@@ -27,7 +27,7 @@ interface CreateEvent<T extends Entity> extends BaseEvent<T> {
   /**
    * The data affected by the event
    */
-  data: Required<T>;
+  data: T & Required<{ uuid: string }>;
 }
 
 interface UpdateEvent<T extends Entity> extends BaseEvent<T> {
@@ -39,7 +39,7 @@ interface UpdateEvent<T extends Entity> extends BaseEvent<T> {
   /**
    * The data affected by the event
    */
-  data: Partial<T> & Required<T["uuid"]>;
+  data: Partial<T> & Required<{ uuid: string }>;
 }
 
 interface DeleteEvent<T extends Entity> extends BaseEvent<T> {
@@ -51,5 +51,5 @@ interface DeleteEvent<T extends Entity> extends BaseEvent<T> {
   /**
    * The data affected by the event
    */
-  uuid: Required<T["uuid"]>;
+  data: { uuid: string };
 }
