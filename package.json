@@ -1,32 +1,35 @@
 {
-  "name": "project_name",
-  "version": "0.1.0",
+  "name": "libocc",
+  "version": "0.0.0",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "watch": "nodemon -w src -x \"tsc && node -r source-map-support/register .\" -e ts",
     "start": "node .",
     "build": "tsc",
-    "prepack": "mkdir -p dist && rm -r dist/* && tsc -p tsconfig.prod.json",
+    "prepack": "mkdir -p dist && touch dist/temp && rm -r dist/* && tsc -p tsconfig.json",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/github_user/project_name.git"
+    "url": "git+https://github.com/Bernd-L/libocc-ts.git"
   },
-  "author": "github_user <git@domain.com>",
+  "author": "Bernd-L <git@bernd.pw>",
   "license": "AGPL-3.0-or-later",
   "bugs": {
-    "url": "https://github.com/github_user/project_name/issues"
+    "url": "https://github.com/Bernd-L/libocc-ts/issues"
   },
-  "homepage": "https://github.com/github_user/project_name#readme",
+  "homepage": "https://github.com/Bernd-L/libocc-ts#readme",
   "dependencies": {
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.19"
   },
   "devDependencies": {
-    "@types/node": "^13.13.15",
+    "@types/node": "^14.6.4",
     "nodemon": "^2.0.4",
-    "typescript": "^3.9.7"
+    "typescript": "^4.0.2"
   }
 }
