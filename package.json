@@ -1,6 +1,6 @@
 {
   "name": "libocc",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
