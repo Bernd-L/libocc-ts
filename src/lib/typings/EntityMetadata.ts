@@ -1,4 +1,8 @@
+import { PropertyDecoratorOptions } from "./PropertyDecoratorOptions.js";
+
 export interface EntityMetadata {
-  idProperty: string | symbol;
-  properties: { identifier: string | symbol; type: string }[];
+  properties: {
+    identifier: string | symbol;
+    options: PropertyDecoratorOptions;
+  }[];
 }

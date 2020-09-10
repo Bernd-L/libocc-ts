@@ -14,9 +14,16 @@ export function Entity(options?: EntityDecoratorOptions) {
       entityMetadataPropertyKey
     );
 
-    console.log("Now");
+    const count = entityMetadata.properties.reduce(
+      (acc, val) => (val.options.isId ? acc + 1 : acc),
+      0
+    );
 
-    console.log(entityMetadata);
+    if (count !== 1) {
+      throw new Error(
+        `Entity "${constructor.name}" has ${count} id properties, but exactly one is required.`
+      );
+    }
 
     // return class extends constructor {
     //   [EntitySymbol]: EntityMetadata = { idProperty: "" };

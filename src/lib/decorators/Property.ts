@@ -4,8 +4,11 @@ import {
   entityMetadataKey,
 } from "../private/symbols.js";
 import { EntityMetadata } from "../typings/EntityMetadata.js";
+import { PropertyDecoratorOptions } from "../typings/PropertyDecoratorOptions.js";
 
-export function Property(): PropertyDecorator {
+export function Property(
+  propertyOptions?: Partial<PropertyDecoratorOptions>
+): PropertyDecorator {
   return function (target: Object, key: string | symbol) {
     // Load the metadata of the entity to which the property belongs to
     let entityMetadata: EntityMetadata = ReflectMetadata.getOwnMetadata(
@@ -13,14 +16,18 @@ export function Property(): PropertyDecorator {
       target,
       entityMetadataPropertyKey
     ) || {
-      idProperty: -1,
       properties: [],
+    };
+
+    const options: Required<PropertyDecoratorOptions> = {
+      isId: false,
+      type: ReflectMetadata.getMetadata("design:type", target, key),
     };
 
     // Add data about the property to the metadata of the entity the property belongs to
     entityMetadata.properties.push({
       identifier: key,
-      type: ReflectMetadata.getMetadata("design:type", target, key),
+      options: Object.assign(options, propertyOptions),
     });
 
     // Write the metadata of the entity to which the property belongs to
@@ -30,7 +37,5 @@ export function Property(): PropertyDecorator {
       target,
       entityMetadataPropertyKey
     );
-
-    console.log(entityMetadata);
   };
 }

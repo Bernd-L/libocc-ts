@@ -4,7 +4,7 @@ import { Property } from "../../lib/decorators/Property.js";
 
 @Entity()
 export class Book {
-  @Property()
+  @Property({ isId: true })
   uuid: string = "some-uuid";
 
   @Property()
@@ -16,7 +16,5 @@ export class Book {
   @Property()
   author: Person = new Person();
 
-  constructor() {
-    console.log("Hello from the book");
-  }
+  constructor() {}
 }

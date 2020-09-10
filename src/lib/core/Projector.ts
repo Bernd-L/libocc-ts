@@ -16,7 +16,27 @@ export class Projector<T> {
   // TODO
   private projection: T[];
 
-  constructor(private eventLog: Event<T>[]) {
+  private idSymbol: string | symbol;
+
+  constructor(target: new () => T, private eventLog: Event<T>[] = []) {
+    const entityMetadata: EntityMetadata = ReflectMetadata.getMetadata(
+      entityMetadataKey,
+      target.prototype,
+      entityMetadataPropertyKey
+    );
+
+    const temp = entityMetadata.properties.find(
+      (property) => property.options.isId
+    )?.identifier;
+
+    if (temp === undefined) {
+      throw new Error(
+        "Invalid target; did you add the `@Entity` decorator to your entity?"
+      );
+    }
+
+    this.idSymbol = temp;
+
     this.projection = this.parse(this.eventLog);
   }
 
@@ -56,6 +76,7 @@ export class Projector<T> {
   }
 
   public add(event: Event<T>): void {
+    this.eventLog.push(event);
     this.parseOne(this.projection, event);
   }
 
@@ -81,14 +102,14 @@ export class Projector<T> {
    * @param event The event to be projected onto the list
    */
   private parseOne(list: T[], event: Event<T>) {
-    let entityMetadata: EntityMetadata = ReflectMetadata.getOwnMetadata(
-      entityMetadataKey,
-      (list[0] as Object).constructor.prototype,
-      entityMetadataPropertyKey
-    );
+    // Check for the ID
+    if ((event.data as any)[this.idSymbol] === undefined) {
+      throw new Error(ProjectorErrors.INVALID_UUID);
+    }
 
-    const i = -1; // TODO
-    // const i = list.findIndex((el) => el.uuid === event.data.uuid);
+    const i = list.findIndex(
+      (el) => (el as any)[this.idSymbol] === (event.data as any)[this.idSymbol]
+    );
 
     switch (event.operation) {
       case CRUD.Create:
@@ -97,7 +118,7 @@ export class Projector<T> {
         }
 
         // Push the new entity onto the list
-        list.push(event.data);
+        list.push(Object.assign({}, event.data));
         break;
 
       case CRUD.Update:
@@ -131,4 +152,5 @@ export enum ProjectorErrors {
   DUPLICATE_UUID = "Duplicate UUID encountered in projection",
   NO_SUCH_UUID = "Cannot mutate non-existant entity",
   DATE_INVALID = 'The `at` parameter needs to be `"latest"` or of type `Date`',
+  INVALID_UUID = "Cannot project event with an invalid UUID",
 }
