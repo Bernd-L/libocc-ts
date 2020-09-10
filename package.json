@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/Bernd-L/libocc-ts#readme",
   "dependencies": {
+    "reflect-metadata": "^0.1.13",
     "source-map-support": "^0.5.19"
   },
   "devDependencies": {

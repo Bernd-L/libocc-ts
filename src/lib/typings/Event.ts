@@ -1,10 +1,6 @@
 import { CRUD } from "./CRUD.js";
-import { Entity } from "./Entity.js";
 
-export type Event<T extends Entity> =
-  | CreateEvent<T>
-  | UpdateEvent<T>
-  | DeleteEvent<T>;
+export type Event<T> = CreateEvent<T> | UpdateEvent<T> | DeleteEvent<T>;
 
 interface BaseEvent<_> {
   /**
@@ -18,7 +14,7 @@ interface BaseEvent<_> {
   operation: CRUD;
 }
 
-interface CreateEvent<T extends Entity> extends BaseEvent<T> {
+interface CreateEvent<T> extends BaseEvent<T> {
   /**
    * What has happened to the data
    */
@@ -30,7 +26,7 @@ interface CreateEvent<T extends Entity> extends BaseEvent<T> {
   data: T & Required<{ uuid: string }>;
 }
 
-interface UpdateEvent<T extends Entity> extends BaseEvent<T> {
+interface UpdateEvent<T> extends BaseEvent<T> {
   /**
    * What has happened to the data
    */
@@ -42,7 +38,7 @@ interface UpdateEvent<T extends Entity> extends BaseEvent<T> {
   data: Partial<T> & Required<{ uuid: string }>;
 }
 
-interface DeleteEvent<T extends Entity> extends BaseEvent<T> {
+interface DeleteEvent<T> extends BaseEvent<T> {
   /**
    * What has happened to the data
    */

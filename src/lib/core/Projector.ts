@@ -1,8 +1,13 @@
 import { Event } from "../typings/Event.js";
-import { Entity } from "../typings/Entity.js";
 import { CRUD } from "../typings/CRUD.js";
+import {
+  entityMetadataKey,
+  entityMetadataPropertyKey,
+} from "../private/symbols.js";
+import { EntityMetadata } from "../typings/EntityMetadata.js";
+import { ReflectMetadata } from "../private/reflect-as-any.js";
 
-export class Projector<T extends Entity> {
+export class Projector<T> {
   // private projections: {
   //   latest: T[];
   //   [at: string]: T[];
@@ -76,7 +81,14 @@ export class Projector<T extends Entity> {
    * @param event The event to be projected onto the list
    */
   private parseOne(list: T[], event: Event<T>) {
-    const i = list.findIndex((el) => el.uuid === event.data.uuid);
+    let entityMetadata: EntityMetadata = ReflectMetadata.getOwnMetadata(
+      entityMetadataKey,
+      (list[0] as Object).constructor.prototype,
+      entityMetadataPropertyKey
+    );
+
+    const i = -1; // TODO
+    // const i = list.findIndex((el) => el.uuid === event.data.uuid);
 
     switch (event.operation) {
       case CRUD.Create:
