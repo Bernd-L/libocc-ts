@@ -1,10 +1,10 @@
-import { EntityMetadata } from "../typings/EntityMetadata.js";
-import { EntityDecoratorOptions } from "../typings/EntityDecoratorOptions.js";
 import { ReflectMetadata } from "../private/reflect-as-any.js";
 import {
   entityMetadataKey,
   entityMetadataPropertyKey,
 } from "../private/symbols.js";
+import { EntityDecoratorOptions } from "../typings/EntityDecoratorOptions.js";
+import { EntityMetadata } from "../typings/EntityMetadata.js";
 
 export function Entity(options?: EntityDecoratorOptions) {
   return function <T extends { new (...args: any[]): {} }>(constructor: T) {

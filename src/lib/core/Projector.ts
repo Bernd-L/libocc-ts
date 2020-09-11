@@ -1,42 +1,13 @@
-import { Event } from "../typings/Event.js";
 import { CRUD } from "../typings/CRUD.js";
-import {
-  entityMetadataKey,
-  entityMetadataPropertyKey,
-} from "../private/symbols.js";
-import { EntityMetadata } from "../typings/EntityMetadata.js";
-import { ReflectMetadata } from "../private/reflect-as-any.js";
+import { Event } from "../typings/Event.js";
 
 export class Projector<T> {
-  // private projections: {
-  //   latest: T[];
-  //   [at: string]: T[];
-  // };
-
-  // TODO
   private projection: T[];
 
-  private idSymbol: string | symbol;
-
-  constructor(target: new () => T, private eventLog: Event<T>[] = []) {
-    const entityMetadata: EntityMetadata = ReflectMetadata.getMetadata(
-      entityMetadataKey,
-      target.prototype,
-      entityMetadataPropertyKey
-    );
-
-    const temp = entityMetadata.properties.find(
-      (property) => property.options.isId
-    )?.identifier;
-
-    if (temp === undefined) {
-      throw new Error(
-        "Invalid target; did you add the `@Entity` decorator to your entity?"
-      );
-    }
-
-    this.idSymbol = temp;
-
+  constructor(
+    private idSymbol: string | symbol,
+    public eventLog: Event<T>[] = []
+  ) {
     this.projection = this.parse(this.eventLog);
   }
 
@@ -49,7 +20,7 @@ export class Projector<T> {
    *
    * @param at Either `"latest"` or a `Date` object specifying the date to stop projecting
    */
-  public project(at: Date | "latest" = "latest"): T[] {
+  public project(at: Date | "latest"): T[] {
     if (at === "latest") {
       return this.projection;
     } else if (at instanceof Date) {
