@@ -16,5 +16,8 @@ export class Book {
   @Property()
   author: Person = new Person();
 
+  // Does not have @Property(), so it should not be included
+  hiddenProperty: string = "sneaky af";
+
   constructor() {}
 }

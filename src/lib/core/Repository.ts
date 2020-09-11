@@ -12,15 +12,16 @@ export class Repository<T> {
   private projector: Projector<T>;
 
   private idSymbol: string | symbol;
+  entityMetadata: EntityMetadata;
 
-  constructor(target: new () => T, private eventLog: Event<T>[] = []) {
-    const entityMetadata: EntityMetadata = ReflectMetadata.getMetadata(
+  constructor(target: new () => T, eventLog: Event<T>[] = []) {
+    this.entityMetadata = ReflectMetadata.getMetadata(
       entityMetadataKey,
       target.prototype,
       entityMetadataPropertyKey
     );
 
-    this.idSymbol = entityMetadata.properties.find(
+    this.idSymbol = this.entityMetadata.properties.find(
       (property) => property.options.isId
     )?.identifier as string | symbol;
 
@@ -30,7 +31,11 @@ export class Repository<T> {
       );
     }
 
-    this.projector = new Projector(this.idSymbol, eventLog);
+    this.projector = new Projector(
+      this.idSymbol,
+      this.entityMetadata,
+      eventLog
+    );
   }
 
   /**

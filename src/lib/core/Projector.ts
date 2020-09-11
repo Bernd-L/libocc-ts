@@ -1,11 +1,13 @@
 import { CRUD } from "../typings/CRUD.js";
 import { Event } from "../typings/Event.js";
+import { EntityMetadata } from "../typings/EntityMetadata.js";
 
 export class Projector<T> {
   private projection: T[];
 
   constructor(
     private idSymbol: string | symbol,
+    private entityMetadata: EntityMetadata,
     public eventLog: Event<T>[] = []
   ) {
     this.projection = this.parse(this.eventLog);
@@ -89,7 +91,7 @@ export class Projector<T> {
         }
 
         // Push the new entity onto the list
-        list.push(Object.assign({}, event.data));
+        list.push(this.copyApplicableProperties(event.data) as T);
         break;
 
       case CRUD.Update:
@@ -97,13 +99,8 @@ export class Projector<T> {
           throw new Error(ProjectorErrors.NO_SUCH_UUID);
         }
 
-        // Remove undefined values
-        Object.keys(event.data).forEach(
-          (key) => key === undefined && delete event.data[key]
-        );
-
         // Assign the remaining values
-        Object.assign(list[i], event.data);
+        this.copyApplicableProperties(event.data, list[i]);
 
         break;
 
@@ -116,6 +113,23 @@ export class Projector<T> {
         list.splice(i, 1);
         break;
     }
+  }
+
+  private copyApplicableProperties(
+    source: Partial<T>,
+    destination = {} as Partial<T>
+  ): Partial<T> | T {
+    for (const key in source) {
+      if (
+        this.entityMetadata.properties.some((p) => p.identifier === key) &&
+        Object.prototype.hasOwnProperty.call(source, key) &&
+        source[key] !== undefined
+      ) {
+        destination[key] = source[key];
+      }
+    }
+
+    return destination;
   }
 }
 
