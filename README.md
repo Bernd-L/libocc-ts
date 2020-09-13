@@ -58,7 +58,7 @@ export class Book {
 }
 ```
 
-`main.ts`
+`main.ts`:
 
 ```TypeScript
 // A utility class from libocc
