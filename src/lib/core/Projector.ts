@@ -115,6 +115,14 @@ export class Projector<T> {
     }
   }
 
+  /**
+   * Copies all fields with the `@Property` decorator from source to destination, provided they are not `undefined`
+   *
+   * This operation requires the source object to be decorated with the `@Entity` decorator.
+   *
+   * @param source The source object of which to copy properties from
+   * @param destination The destination object to which to copy properties to
+   */
   private copyApplicableProperties(
     source: Partial<T>,
     destination = {} as Partial<T>
@@ -133,9 +141,29 @@ export class Projector<T> {
   }
 }
 
+/**
+ * A list of possible errors which may occur when working with the Projector class
+ */
 export enum ProjectorErrors {
+  /**
+   * An error encountered when attempting to create a new instance
+   * of an entity type with an ID which is already in use
+   */
   DUPLICATE_UUID = "Duplicate UUID encountered in projection",
+
+  /**
+   * An error encountered when attempting to mutate or delete an entity which could
+   * not be found using the provided ID
+   */
   NO_SUCH_UUID = "Cannot mutate non-existant entity",
+
+  /**
+   * An error encountered when attempting to use an invalid date
+   */
   DATE_INVALID = 'The `at` parameter needs to be `"latest"` or of type `Date`',
+
+  /**
+   * An error encountered when attempting to use an invalid ID value
+   */
   INVALID_UUID = "Cannot project event with an invalid UUID",
 }

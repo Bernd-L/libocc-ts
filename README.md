@@ -50,7 +50,7 @@ export class Book {
   @Property()
   author: Person = new Person();
 
-  // Does not have @Property(), so it should not be included
+  // Does not have `@Property()`, so it should not be included
   hiddenProperty: string = "sneaky af";
 
   // The constructor does not need any decorators or parameters on it
