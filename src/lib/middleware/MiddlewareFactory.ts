@@ -7,7 +7,25 @@ import {
 } from "express";
 import { Repository } from "../core/Repository.js";
 
+/**
+ * Generates a middleware factory which can make middleware for all
+ * operations provided by the repository.
+ *
+ * The repository functions requiring a date default to the (cached)
+ * latest projection, but can optionally be provided with a custom
+ * date using which the search operations will be performed.
+ */
 export class MiddlewareFactory<T> {
+  /**
+   * Generates a middleware factory which can make middleware for all
+   * operations provided by the repository.
+   *
+   * The repository functions requiring a date default to the (cached)
+   * latest projection, but can optionally be provided with a custom
+   * date using which the search operations will be performed.
+   *
+   * @param repository The repository to use for all operations
+   */
   constructor(private repository: Repository<T>) {}
 
   /**
